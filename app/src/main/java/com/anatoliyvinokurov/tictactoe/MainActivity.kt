@@ -14,11 +14,15 @@ import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.interstitial.InterstitialAd
 import com.google.android.gms.ads.*
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback
+import android.media.MediaPlayer
+
 
 //ca-app-pub-3940256099942544/1033173712
-const val AD_UNIT_ID = "ca-app-pub-3940256099942544/1033173712"
+const val AD_UNIT_ID = "ca-app-pub-7477627546717786/9246410027"
 
 class MainActivity : AppCompatActivity() {
+	private var mediaPlayer1: MediaPlayer? = null
+    private var mediaPlayer2: MediaPlayer? = null
     private var activePlayer = 0
     private var gameState = IntArray(9) { 2 }
     private val winningPositions = arrayOf(
@@ -40,6 +44,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         initializeViews()
+        // Инициализация медиаплееров для звуков
+        mediaPlayer1 = MediaPlayer.create(this, R.raw.music1)
+        mediaPlayer2 = MediaPlayer.create(this, R.raw.music2)
         MobileAds.initialize(this) {}
         restart.setOnClickListener { resetGameAndShowAd() }
     }
@@ -87,6 +94,12 @@ class MainActivity : AppCompatActivity() {
         val tappedCounter = counter.tag.toString().toInt()
         if (gameState[tappedCounter] == 2 && gameActive) {
             gameState[tappedCounter] = activePlayer
+            // Воспроизведение звуков в зависимости от активного игрока
+            if (activePlayer == 0) {
+                mediaPlayer1?.start()
+            } else {
+                mediaPlayer2?.start()
+            }
             counter.translationY = -1500f
             setCounterImageAndSwitchPlayer(counter)
             counter.animate().translationYBy(1500f).rotation(36000f).setDuration(300)
@@ -213,5 +226,12 @@ class MainActivity : AppCompatActivity() {
             adIsLoading = true
             loadAd()
         }
+    }
+
+    override fun onDestroy() {
+        // Освобождение ресурсов медиаплееров при завершении активности
+        mediaPlayer1?.release()
+        mediaPlayer2?.release()
+        super.onDestroy()
     }
 }
