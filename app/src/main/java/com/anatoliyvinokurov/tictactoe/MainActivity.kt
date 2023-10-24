@@ -30,10 +30,10 @@ class MainActivity : AppCompatActivity() {
     private var interstitialAd: InterstitialAd? = null
     private var adIsLoading: Boolean = false
     private var isSecondGame: Boolean = false
-
     private lateinit var restart: Button
     private lateinit var playTheGame: TextView
     private lateinit var score: TextView
+    private var gameResult: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,6 +59,7 @@ class MainActivity : AppCompatActivity() {
         gameState = IntArray(9) { 2 }
         gameActive = true
         activePlayer = 0
+        gameResult = null // Сброс результата игры
         playTheGame.visibility = View.VISIBLE
         restart.visibility = View.INVISIBLE
         score.visibility = View.INVISIBLE
@@ -103,24 +104,35 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        var winner: String? = null
+
         for (winningPosition in winningPositions) {
             if (gameState[winningPosition[0]] == gameState[winningPosition[1]] &&
                 gameState[winningPosition[1]] == gameState[winningPosition[2]] &&
                 gameState[winningPosition[1]] != 2
             ) {
                 gameActive = false
-                val winner = if (activePlayer == 1) "Player 1" else "Player 2"
-                Toast.makeText(this, "$winner Wins", Toast.LENGTH_SHORT).show()
-                playTheGame.visibility = View.GONE
-                score.visibility = View.VISIBLE
-                score.text = "$winner Wins"
-                restart.visibility = View.VISIBLE
+                winner = if (activePlayer == 1) "  Player 1" else "  Player 2"
+                break
             }
         }
 
-        if (allCellsFilled && gameActive) {
+        if (winner != null) {
+            gameResult = "$winner Wins"
+        } else if (allCellsFilled && gameActive) {
             // Все ячейки заполнены, ничья
-            Toast.makeText(this, "It's a Draw", Toast.LENGTH_SHORT).show()
+            gameResult = "It's a Draw"
+        }
+
+        updateGameUI()
+    }
+
+    private fun updateGameUI() {
+        if (gameResult != null) {
+            Toast.makeText(this, gameResult, Toast.LENGTH_SHORT).show()
+            playTheGame.visibility = View.GONE
+            score.visibility = View.VISIBLE
+            score.text = gameResult
             restart.visibility = View.VISIBLE
         }
     }
@@ -131,6 +143,7 @@ class MainActivity : AppCompatActivity() {
                 override fun onAdDismissedFullScreenContent() {
                     interstitialAd = null
                     loadAd()
+                    updateGameUI() // Вызов после показа рекламы и перед началом новой игры
                 }
 
                 override fun onAdFailedToShowFullScreenContent(adError: AdError) {
