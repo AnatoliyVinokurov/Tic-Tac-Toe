@@ -109,7 +109,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        var winner: String? = null
+        var winningLine: IntArray? = null
 
         for (winningPosition in winningPositions) {
             if (gameState[winningPosition[0]] == gameState[winningPosition[1]] &&
@@ -117,27 +117,41 @@ class MainActivity : AppCompatActivity() {
                 gameState[winningPosition[1]] != 2
             ) {
                 gameActive = false
-                winner = if (activePlayer == 1) "Player 1" else "Player 2"
+                winningLine = winningPosition
                 break
             }
         }
 
-        if (winner != null) {
-            gameResult = "$winner Wins"
+        if (winningLine != null) {
+            gameResult = if (activePlayer == 1) "Player 1 Wins" else "Player 2 Wins"
         } else if (allCellsFilled && gameActive) {
             gameResult = "It's a Draw"
         }
 
-        updateGameUI()
+        updateGameUI(winningLine)
     }
 
-    private fun updateGameUI() {
+    private fun updateGameUI(winningLine: IntArray?) {
         if (gameResult != null) {
             Toast.makeText(this, gameResult, Toast.LENGTH_SHORT).show()
             playTheGame.visibility = View.GONE
             score.visibility = View.VISIBLE
             score.text = gameResult
             restart.visibility = View.VISIBLE
+
+            // Здесь вы можете обновить изображения только в выигравшей линии
+            if (winningLine != null) {
+                val gridLayout = findViewById<GridLayout>(R.id.gridlayout)
+                for (index in winningLine) {
+                    val imageView = gridLayout.getChildAt(index) as ImageView
+                    // Установите изображение с перечеркнутым крестиком или ноликом в зависимости от активного игрока
+                    if (activePlayer == 0) {
+                        imageView.setImageResource(R.drawable.tictactoe_o_strike)
+                    } else {
+                        imageView.setImageResource(R.drawable.tictcx_strike)
+                    }
+                }
+            }
         } else {
             playTheGame.text = "$currentPlayerName's turn"
         }
@@ -149,7 +163,7 @@ class MainActivity : AppCompatActivity() {
                 override fun onAdDismissedFullScreenContent() {
                     interstitialAd = null
                     loadAd()
-                    updateGameUI()
+                    updateGameUI(null)
                 }
 
                 override fun onAdFailedToShowFullScreenContent(adError: AdError) {
