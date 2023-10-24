@@ -4,14 +4,22 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".MainActivity">
+
+    <ImageView
+        android:id="@+id/backgroundImageView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/background" />
 
     <GridLayout
         android:id="@+id/gridlayout"
         android:layout_width="match_parent"
         android:layout_height="368dp"
         android:layout_marginBottom="19dp"
-        android:layout_marginTop="124dp"
+        android:layout_marginTop="100dp"
         android:background="@drawable/tic"
         android:columnCount="3"
         android:rowCount="3"
@@ -98,49 +106,47 @@
             android:onClick="dropIn"
             android:tag="8" />
     </GridLayout>
-
     <Button
         android:id="@+id/button"
-        android:layout_width="102dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
         android:text="Restart"
         android:visibility="invisible"
-        app:layout_constraintHorizontal_bias="0.945"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.794" />
+        android:textStyle="bold"
+        android:fontFamily="casual"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/gridlayout" />
 
     <TextView
         android:id="@+id/textView"
-        android:layout_width="246dp"
-        android:layout_height="68dp"
-        android:layout_marginBottom="22dp"
-        android:layout_marginEnd="26dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="16dp"
-        android:gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="Player 1 wins"
-        android:textSize="40sp"
+        android:textColor="@android:color/holo_blue_dark"
+        android:fontFamily="casual"
+        android:textSize="36sp"
+        android:textStyle="bold"
         android:visibility="invisible"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/gridlayout"
-        app:layout_constraintEnd_toStartOf="@+id/button"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"  />
 
     <TextView
         android:id="@+id/textView2"
-        android:layout_width="344dp"
-        android:layout_height="84dp"
-        android:gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="Play the game"
+        android:textColor="@android:color/holo_blue_dark"
+        android:textSize="36sp"
+        android:textStyle="bold"
+        android:fontFamily="casual"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:textSize="50sp"
-        tools:layout_editor_absoluteX="17dp"
-        tools:layout_editor_absoluteY="9dp" />
+        app:layout_constraintBottom_toTopOf="@+id/gridlayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -34,6 +34,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var playTheGame: TextView
     private lateinit var score: TextView
     private var gameResult: String? = null
+    private var currentPlayerName = "Player 1"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,6 +48,7 @@ class MainActivity : AppCompatActivity() {
         restart = findViewById(R.id.button)
         playTheGame = findViewById(R.id.textView2)
         score = findViewById(R.id.textView)
+        playTheGame.text = "$currentPlayerName's turn"
     }
 
     private fun resetGameAndShowAd() {
@@ -59,7 +61,8 @@ class MainActivity : AppCompatActivity() {
         gameState = IntArray(9) { 2 }
         gameActive = true
         activePlayer = 0
-        gameResult = null // Сброс результата игры
+        gameResult = null
+        currentPlayerName = "Player 1"
         playTheGame.visibility = View.VISIBLE
         restart.visibility = View.INVISIBLE
         score.visibility = View.INVISIBLE
@@ -89,9 +92,11 @@ class MainActivity : AppCompatActivity() {
         if (activePlayer == 0) {
             counter.setImageResource(R.drawable.tictcx)
             activePlayer = 1
+            currentPlayerName = "Player 2"
         } else {
             counter.setImageResource(R.drawable.tictactoe_o)
             activePlayer = 0
+            currentPlayerName = "Player 1"
         }
     }
 
@@ -112,7 +117,7 @@ class MainActivity : AppCompatActivity() {
                 gameState[winningPosition[1]] != 2
             ) {
                 gameActive = false
-                winner = if (activePlayer == 1) "  Player 1" else "  Player 2"
+                winner = if (activePlayer == 1) "Player 1" else "Player 2"
                 break
             }
         }
@@ -120,7 +125,6 @@ class MainActivity : AppCompatActivity() {
         if (winner != null) {
             gameResult = "$winner Wins"
         } else if (allCellsFilled && gameActive) {
-            // Все ячейки заполнены, ничья
             gameResult = "It's a Draw"
         }
 
@@ -134,6 +138,8 @@ class MainActivity : AppCompatActivity() {
             score.visibility = View.VISIBLE
             score.text = gameResult
             restart.visibility = View.VISIBLE
+        } else {
+            playTheGame.text = "$currentPlayerName's turn"
         }
     }
 
@@ -143,7 +149,7 @@ class MainActivity : AppCompatActivity() {
                 override fun onAdDismissedFullScreenContent() {
                     interstitialAd = null
                     loadAd()
-                    updateGameUI() // Вызов после показа рекламы и перед началом новой игры
+                    updateGameUI()
                 }
 
                 override fun onAdFailedToShowFullScreenContent(adError: AdError) {
