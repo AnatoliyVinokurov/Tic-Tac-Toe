@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity() {
     private var gameActive = true
     private var interstitialAd: InterstitialAd? = null
     private var adIsLoading: Boolean = false
-    private var isSecondGame: Boolean = false
+    private var numberOfGame = 0
     private lateinit var restart: Button
     private lateinit var playTheGame: TextView
     private lateinit var score: TextView
@@ -53,7 +53,13 @@ class MainActivity : AppCompatActivity() {
 
     private fun resetGameAndShowAd() {
         resetGame()
+        if(numberOfGame >= 4){
         showInterstitialAd()
+        numberOfGame=0
+        }else{
+        numberOfGame++;
+        }
+        
     }
 
     private fun resetGame() {
@@ -139,12 +145,12 @@ class MainActivity : AppCompatActivity() {
             score.text = gameResult
             restart.visibility = View.VISIBLE
 
-            // Здесь вы можете обновить изображения только в выигравшей линии
+            // Обновил изображения только в выигравшей линии
             if (winningLine != null) {
                 val gridLayout = findViewById<GridLayout>(R.id.gridlayout)
                 for (index in winningLine) {
                     val imageView = gridLayout.getChildAt(index) as ImageView
-                    // Установите изображение с перечеркнутым крестиком или ноликом в зависимости от активного игрока
+                    // Установил изображение с перечеркнутым крестиком или ноликом в зависимости от активного игрока
                     if (activePlayer == 0) {
                         imageView.setImageResource(R.drawable.tictactoe_o_strike)
                     } else {
